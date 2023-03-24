@@ -10,11 +10,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.mathias8dev.kinotest.domain.viewModel.KVehicleViewModel
+import com.mathias8dev.kinotest.ui.screens.VehicleListScreen
 import com.mathias8dev.kinotest.ui.theme.KinoTestTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val vm = KVehicleViewModel()
         super.onCreate(savedInstanceState)
+
         setContent {
             KinoTestTheme {
                 // A surface container using the 'background' color from the theme
@@ -22,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    VehicleListScreen(vm = vm)
                 }
             }
         }
