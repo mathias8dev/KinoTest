@@ -41,7 +41,7 @@ fun VehicleListScreen(
     val state by vm.uiState.collectAsState()
 
     when (state) {
-        is KVUiState.Empty -> {
+        is KVUiState.Start -> {
             LaunchedEffect(Unit, block = {
                 vm.getVehicleList()
             })
@@ -58,7 +58,8 @@ fun VehicleListScreen(
 
         is KVUiState.Loaded -> DataLoadedView(
             data = (state as KVUiState.Loaded).data,
-            onKVehicleClicked = onKVehicleClicked
+            onKVehicleClicked = onKVehicleClicked,
+            onReload = { vm.getVehicleList() }
         )
     }
 
@@ -85,7 +86,7 @@ fun ErrorView(message: String, onReload: () -> Unit) {
 }
 
 @Composable
-fun DataLoadedView(data: List<KVehicle>, onKVehicleClicked: (Int) -> Unit = {}) {
+fun DataLoadedView(data: List<KVehicle>, onKVehicleClicked: (Int) -> Unit = {}, onReload: () -> Unit = {}) {
     Column {
 
         TopAppBar {
@@ -100,7 +101,24 @@ fun DataLoadedView(data: List<KVehicle>, onKVehicleClicked: (Int) -> Unit = {}) 
         }
 
         Column(modifier = Modifier.padding(16.dp)) {
-            LazyColumn(modifier = Modifier.fillMaxHeight()) {
+            if (data.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    KLottieAnimation(lottieFile = R.raw.no_data)
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(text = Strings.dataEmpty, style = MaterialTheme.typography.h6)
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Button(onClick = onReload) {
+                        Text(Strings.reload)
+                    }
+                }
+            }
+            else LazyColumn(modifier = Modifier.fillMaxHeight()) {
                 items(data) { vehicle ->
                     Column {
                         Row(

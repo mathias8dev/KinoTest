@@ -18,7 +18,7 @@ import java.util.*
 
 class KVehicleViewModel: ViewModel() {
 
-    private val _uiState = MutableStateFlow<KVUiState>(KVUiState.Empty)
+    private val _uiState = MutableStateFlow<KVUiState>(KVUiState.Start)
     val uiState: StateFlow<KVUiState> = _uiState
 
     private val _vehiclesList = mutableStateListOf<KVehicle>()
